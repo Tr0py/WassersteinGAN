@@ -67,7 +67,7 @@ if __name__=="__main__":
         # folder dataset
         dataset = dset.ImageFolder(root=opt.dataroot,
                                 transform=transforms.Compose([
-                                    transforms.Scale(opt.imageSize),
+                                    transforms.Resize(opt.imageSize),
                                     transforms.CenterCrop(opt.imageSize),
                                     transforms.ToTensor(),
                                     transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
@@ -75,7 +75,7 @@ if __name__=="__main__":
     elif opt.dataset == 'lsun':
         dataset = dset.LSUN(db_path=opt.dataroot, classes=['bedroom_train'],
                             transform=transforms.Compose([
-                                transforms.Scale(opt.imageSize),
+                                transforms.Resize(opt.imageSize),
                                 transforms.CenterCrop(opt.imageSize),
                                 transforms.ToTensor(),
                                 transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
@@ -83,7 +83,7 @@ if __name__=="__main__":
     elif opt.dataset == 'cifar10':
         dataset = dset.CIFAR10(root=opt.dataroot, download=True,
                             transform=transforms.Compose([
-                                transforms.Scale(opt.imageSize),
+                                transforms.Resize(opt.imageSize),
                                 transforms.ToTensor(),
                                 transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
                             ])
@@ -163,9 +163,11 @@ if __name__=="__main__":
 
     gen_iterations = 0
     for epoch in range(opt.niter):
+        print(f'{epoch=}')
         data_iter = iter(dataloader)
         i = 0
         while i < len(dataloader):
+            print(f'updating D net')
             ############################
             # (1) Update D network
             ###########################
@@ -185,7 +187,7 @@ if __name__=="__main__":
                 for p in netD.parameters():
                     p.data.clamp_(opt.clamp_lower, opt.clamp_upper)
 
-                data = data_iter.next()
+                data = next(data_iter)
                 i += 1
 
                 # train with real
@@ -214,6 +216,7 @@ if __name__=="__main__":
             ############################
             # (2) Update G network
             ###########################
+            print(f'updating G net')
             for p in netD.parameters():
                 p.requires_grad = False # to avoid computation
             netG.zero_grad()
