@@ -167,7 +167,6 @@ if __name__=="__main__":
         data_iter = iter(dataloader)
         i = 0
         while i < len(dataloader):
-            print(f'updating D net')
             ############################
             # (1) Update D network
             ###########################
@@ -216,7 +215,6 @@ if __name__=="__main__":
             ############################
             # (2) Update G network
             ###########################
-            print(f'updating G net')
             for p in netD.parameters():
                 p.requires_grad = False # to avoid computation
             netG.zero_grad()
