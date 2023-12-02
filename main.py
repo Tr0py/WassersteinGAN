@@ -204,9 +204,7 @@ if __name__=="__main__":
 
                 # train with fake
                 noise.resize_(opt.batchSize, nz, 1, 1).normal_(0, 1)
-                # noisev = Variable(noise, volatile = True) # totally freeze netG
-                with torch.no_grad():
-                    noisev = noise
+                noisev = Variable(noise, volatile = True) # totally freeze netG
                 fake = Variable(netG(noisev).data)
                 inputv = fake
                 errD_fake = netD(inputv)
@@ -236,9 +234,7 @@ if __name__=="__main__":
             errD.data[0], errG.data[0], errD_real.data[0], errD_fake.data[0]))
         real_cpu = real_cpu.mul(0.5).add(0.5)
         vutils.save_image(real_cpu, '{0}/real_samples.png'.format(opt.experiment))
-        # fake = netG(Variable(fixed_noise, volatile=True))
-        with torch.no_grad():
-            fake = fixed_noise
+        fake = netG(Variable(fixed_noise, volatile=True))
         fake.data = fake.data.mul(0.5).add(0.5)
         vutils.save_image(fake.data, '{0}/fake_samples_{1}.png'.format(opt.experiment, epoch))
         # do checkpointing
