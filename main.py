@@ -228,9 +228,6 @@ if __name__=="__main__":
             optimizerG.step()
             gen_iterations += 1
 
-            print('[%d/%d][%d/%d][%d] Loss_D: %f Loss_G: %f Loss_D_real: %f Loss_D_fake %f'
-                % (epoch, opt.niter, i, len(dataloader), gen_iterations,
-                errD.data[0], errG.data[0], errD_real.data[0], errD_fake.data[0]))
             if gen_iterations % 500 == 0:
                 real_cpu = real_cpu.mul(0.5).add(0.5)
                 vutils.save_image(real_cpu, '{0}/real_samples.png'.format(opt.experiment))
@@ -238,6 +235,9 @@ if __name__=="__main__":
                 fake.data = fake.data.mul(0.5).add(0.5)
                 vutils.save_image(fake.data, '{0}/fake_samples_{1}.png'.format(opt.experiment, gen_iterations))
 
+        print('[%d/%d][%d/%d][%d] Loss_D: %f Loss_G: %f Loss_D_real: %f Loss_D_fake %f'
+            % (epoch, opt.niter, i, len(dataloader), gen_iterations,
+            errD.data[0], errG.data[0], errD_real.data[0], errD_fake.data[0]))
         # do checkpointing
         torch.save(netG.state_dict(), '{0}/netG_epoch_{1}.pth'.format(opt.experiment, epoch))
         torch.save(netD.state_dict(), '{0}/netD_epoch_{1}.pth'.format(opt.experiment, epoch))
